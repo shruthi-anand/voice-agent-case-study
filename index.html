@@ -1,0 +1,1227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="A portfolio case study of a multilingual voice AI agent designed for Hermitage, a Bengaluru restaurant.">
+<meta name="author" content="Shruthi VD">
+<meta property="og:title" content="A Table for Four, in Any Language">
+<meta property="og:description" content="Case study — voice UX and interaction design for a multilingual restaurant AI agent.">
+<meta property="og:type" content="website">
+<title>A Table for Four, in Any Language</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,340;9..144,400;9..144,420;9..144,340&family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --canvas:#F7F5F0; --surface:#FFFFFF; --surface2:#EFEAE2;
+    --hairline:#E3DDD2; --hairline-strong:#D4CCBE;
+    --ink:#27221C; --body:#4E473F; --muted:#857C70;
+    --accent:#2F5D3A; --accent-soft:#E4EDE4;
+    --amber:#B45309; --amber-soft:#F6E8D8;
+    --mint:#A7E5D3; --peach:#F4C5A8;
+    --serif:"Fraunces", Georgia, serif;
+    --sans:"Inter", -apple-system, "Segoe UI", sans-serif;
+  }
+  body{background:var(--canvas); color:var(--body); font-family:var(--sans);
+    font-size:16px; line-height:1.55; padding-inline:20px; margin:0;}
+  .wrap{max-width:1040px; margin:0 auto;}
+  strong{color:var(--ink); font-weight:600;}
+  a{color:var(--accent);}
+  figure{margin:0;}
+  svg{max-width:100%; height:auto; display:block;}
+  .num{font-variant-numeric:tabular-nums;}
+
+  /* type */
+  .eyebrow{font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); margin:0 0 14px;}
+  h1{font-family:var(--serif); font-weight:380; font-size:clamp(42px,7vw,78px);
+    line-height:1.02; letter-spacing:-.02em; color:var(--ink); margin:0 0 22px; text-wrap:balance;}
+  h2{font-family:var(--serif); font-weight:400; font-size:clamp(30px,4.4vw,46px);
+    line-height:1.08; letter-spacing:-.015em; color:var(--ink); margin:0 0 12px; text-wrap:balance;}
+  h3{font-size:17px; font-weight:600; color:var(--ink); margin:0 0 6px;}
+  .standfirst{font-size:17px; color:var(--body); max-width:56ch; margin:0 0 8px;}
+  .cap{font-size:13.5px; color:var(--muted); line-height:1.5;}
+  figcaption{font-size:13.5px; color:var(--muted); margin-top:12px; max-width:64ch;}
+
+  section{padding-block:52px;}
+  .rule{border:0; border-top:1px solid var(--hairline); margin:0;}
+
+  /* chips + pills */
+  .chip{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--hairline-strong);
+    border-radius:999px; padding:4px 12px; font-size:12.5px; font-weight:500; color:var(--ink);
+    background:var(--surface);}
+  .chip.soft{background:var(--surface2); border-color:transparent;}
+  .chip.ghost{color:var(--muted); background:transparent; border-style:dashed;}
+  .ph{display:inline-flex; align-items:center; border:1px solid var(--amber);
+    color:var(--amber); background:var(--amber-soft); border-radius:999px;
+    padding:1px 8px; font-size:10.5px; font-weight:600; letter-spacing:.08em; vertical-align:2px;}
+
+  /* hero */
+  .hero{padding-block:72px 40px;}
+  .meta{display:flex; flex-wrap:wrap; gap:28px; margin-top:34px; padding-top:22px;
+    border-top:1px solid var(--hairline);}
+  .meta div{min-width:120px;}
+  .meta dt{font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:3px;}
+  .meta dd{margin:0; font-size:14px; color:var(--ink); font-weight:500;}
+
+  /* utterance */
+  .utter{background:var(--surface); border:1px solid var(--hairline); border-radius:20px;
+    padding:clamp(24px,4vw,44px);}
+  .utter-line{font-family:var(--serif); font-weight:400; font-size:clamp(24px,4.4vw,44px);
+    line-height:1.35; color:var(--ink); margin:0 0 26px; text-wrap:balance;}
+  .seg{border-bottom:3px solid var(--hairline-strong); padding-bottom:2px;}
+  .seg.hi{border-color:var(--accent);}
+  .seg.slot{border-bottom-style:dotted;}
+  .utter-notes{display:flex; flex-wrap:wrap; gap:10px;}
+  .note{flex:1 1 220px; background:var(--surface2); border-radius:12px; padding:12px 16px;
+    font-size:13.5px; color:var(--body);}
+  .note b{display:block; color:var(--ink); font-weight:600; margin-bottom:2px; font-size:13.5px;}
+
+  /* thesis */
+  .thesis{position:relative; text-align:center; padding-block:68px; overflow:hidden;}
+  .thesis .orb{position:absolute; inset:auto; left:50%; top:50%; width:560px; height:560px;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(closest-side, var(--mint), transparent 70%);
+    opacity:.32; pointer-events:none;}
+  .thesis p{position:relative; font-family:var(--serif); font-weight:400;
+    font-size:clamp(24px,3.6vw,38px); line-height:1.3; color:var(--ink);
+    max-width:22em; margin:14px auto 0; text-wrap:balance;}
+  .thesis .eyebrow{position:relative; margin:0;}
+
+  /* stat tiles */
+  .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px;}
+  .tile{background:var(--surface); border:1px solid var(--hairline); border-radius:16px;
+    padding:22px 22px 18px;}
+  .tile .v{font-size:clamp(26px,3vw,34px); font-weight:600; color:var(--ink);
+    font-variant-numeric:tabular-nums; letter-spacing:-.01em;}
+  .tile .l{font-size:13px; color:var(--muted); margin-top:6px; line-height:1.45;}
+  .source{margin-top:14px;}
+
+  /* section header */
+  .shead{max-width:640px; margin-bottom:34px;}
+
+  /* key observation strip */
+  .obs{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-block:30px;}
+  .ob{border-left:3px solid var(--accent); padding:4px 0 4px 16px; font-size:14.5px;}
+  .ob b{display:block; color:var(--ink); font-weight:600; margin-bottom:3px;}
+
+  /* tabs */
+  .tabbar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:0;}
+  .tabbar button{font-family:var(--sans); font-size:13.5px; font-weight:500; color:var(--body);
+    background:transparent; border:1px solid var(--hairline-strong); border-radius:999px;
+    padding:8px 18px; cursor:pointer;}
+  .tabbar button[aria-selected="true"]{background:var(--ink); border-color:var(--ink); color:var(--canvas);}
+  .tabbar button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  .panel{background:var(--surface); border:1px solid var(--hairline); border-radius:18px;
+    padding:clamp(20px,3.4vw,34px); margin-top:14px;}
+
+  /* fact grid */
+  .facts{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px 28px;}
+  .facts dt{font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:4px;}
+  .facts dd{margin:0; font-size:14.5px; color:var(--ink);}
+
+  /* ranked list */
+  .rank{list-style:none; margin:18px 0 0; padding:0;}
+  .rank li{display:flex; gap:18px; align-items:baseline; padding:13px 0;
+    border-top:1px solid var(--hairline); font-size:14.5px;}
+  .rank li:first-child{border-top:0;}
+  .rank .n{font-family:var(--serif); font-size:24px; font-weight:400; color:var(--hairline-strong);
+    min-width:34px; font-variant-numeric:tabular-nums;}
+  .rank li:nth-child(1) .n{color:var(--accent);}
+  .rank b{color:var(--ink); font-weight:600;}
+  .rank .why{color:var(--muted); font-size:13.5px;}
+
+  /* pull quote */
+  .pull{font-family:var(--serif); font-size:clamp(20px,2.8vw,28px); font-weight:400;
+    color:var(--ink); line-height:1.35; border-left:3px solid var(--accent);
+    padding-left:20px; margin:26px 0; max-width:26em;}
+
+  /* believed / saw */
+  .flip{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; margin-top:20px;}
+  .flip .card{background:var(--surface2); border-radius:14px; padding:18px 20px; font-size:14px;}
+  .flip .lbl{font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; margin-bottom:6px;}
+  .flip .believed .lbl{color:var(--muted);}
+  .flip .saw{margin-top:12px; padding-top:12px; border-top:1px solid var(--hairline-strong);}
+  .flip .saw .lbl{color:var(--accent);}
+  .flip .so{margin-top:10px; font-size:13px; color:var(--muted);}
+
+  /* mini stat row */
+  .mini{display:flex; flex-wrap:wrap; gap:10px 30px; margin:20px 0; padding:16px 20px;
+    background:var(--surface2); border-radius:14px;}
+  .mini span{font-size:13.5px; color:var(--muted);}
+  .mini b{font-size:20px; color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums; margin-right:6px;}
+
+  /* split bar */
+  .split{margin:20px 0 8px;}
+  .split .bar{display:flex; gap:2px; height:36px; border-radius:8px; overflow:hidden;}
+  .split .pub{width:30%; background:var(--hairline-strong);}
+  .split .ask{width:70%; background:var(--accent);}
+  .split .legend{display:flex; gap:2px; margin-top:8px; font-size:12.5px; color:var(--muted);}
+  .split .legend span:first-child{width:30%;}
+  .split .legend span:last-child{width:70%; color:var(--ink);}
+
+  /* tiers */
+  .tiers{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-top:22px;}
+  .tier{border:1px solid var(--hairline); border-radius:12px; padding:14px 16px; font-size:13.5px;
+    background:var(--surface);}
+  .tier .t{font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:4px;}
+  .tier b{color:var(--ink);}
+
+  .rulecard{border-left:3px solid var(--accent); background:var(--accent-soft);
+    border-radius:0 14px 14px 0; padding:16px 20px; font-size:14.5px; margin-top:22px; color:var(--ink);}
+
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+
+  /* reason cards */
+  .reasons{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin-block:26px;}
+  .reason{background:var(--surface); border:1px solid var(--hairline); border-radius:16px;
+    padding:20px 22px; font-size:14px;}
+  .reason b{display:block; font-size:15px; color:var(--ink); font-weight:600; margin-bottom:6px;}
+
+  /* ladder */
+  .ladder{margin-top:26px;}
+  .ladder .row{display:flex; flex-wrap:wrap; align-items:center; gap:10px;}
+  .ladder .arrow{color:var(--muted);}
+  .ladder .base{margin-top:12px; background:var(--surface2); border-radius:999px;
+    padding:8px 18px; font-size:12.5px; color:var(--body); display:inline-block;}
+  .now{background:var(--ink); color:var(--canvas); border-color:var(--ink);}
+
+  /* closing band */
+  .band{background:var(--ink); color:#EFEAE2; border-radius:22px;
+    padding:clamp(30px,5vw,54px); margin-top:44px;}
+  .band p{font-family:var(--serif); font-weight:340; font-size:clamp(22px,3.2vw,34px);
+    line-height:1.3; margin:0; max-width:26em; text-wrap:balance;}
+  .band strong{color:#fff;}
+  .band .next{font-family:var(--sans); font-size:13px; color:#B9B0A2; margin-top:18px;}
+
+  /* toc + coming */
+  .toc{display:flex; flex-wrap:wrap; gap:8px; margin-top:26px;}
+
+  /* decision log */
+  details.dlog{border-top:1px solid var(--hairline); padding-block:26px 10px;}
+  details.dlog summary{cursor:pointer; font-size:14px; font-weight:600; color:var(--ink);
+    list-style:none; display:flex; align-items:center; gap:10px;}
+  details.dlog summary::after{content:"+"; font-family:var(--serif); font-size:20px; color:var(--muted);}
+  details.dlog[open] summary::after{content:"–";}
+  .dl{margin-top:18px; display:grid; gap:0;}
+  .d{display:grid; grid-template-columns:64px 1fr; gap:14px; padding:14px 0;
+    border-top:1px solid var(--hairline); font-size:13.5px;}
+  .d .id{font-weight:600; color:var(--accent); font-variant-numeric:tabular-nums;}
+  .d b{color:var(--ink); font-weight:600;}
+  .d .out,.d .gr{color:var(--muted); display:block; margin-top:2px;}
+
+  footer{padding-block:34px 60px; font-size:12.5px; color:var(--muted);
+    border-top:1px solid var(--hairline); margin-top:20px;}
+
+  /* sub-blocks inside big sections */
+  .sub{padding-block:36px; border-top:1px solid var(--hairline);}
+  .sub.first{border-top:0; padding-top:8px;}
+  .subhead{font-family:var(--serif); font-size:clamp(22px,3vw,30px); font-weight:400;
+    color:var(--ink); margin:0 0 8px; letter-spacing:-.01em;}
+  .sublede{font-size:14.5px; color:var(--body); max-width:58ch; margin:0 0 18px;}
+
+  /* screen-to-voice map */
+  .xmap{margin-top:8px;}
+  .xrow{display:grid; grid-template-columns:minmax(140px,1fr) 26px minmax(200px,1.6fr);
+    gap:12px; padding:12px 0; border-top:1px solid var(--hairline); font-size:14px; align-items:baseline;}
+  .xrow:first-child{border-top:0;}
+  .xrow .g{color:var(--muted);}
+  .xrow .arr{color:var(--accent); text-align:center;}
+  .xrow b{color:var(--ink); font-weight:600;}
+
+  /* latency bar */
+  .lat{display:flex; gap:2px; height:34px; border-radius:8px; overflow:hidden; margin-top:16px;}
+  .lat div{min-width:2px;}
+  .l1{background:#24462C;} .l2{background:#2F5D3A;} .l3{background:#4E7C59;} .l4{background:#7BA383;}
+  .l5{background:var(--surface2); border:1px dashed var(--hairline-strong); border-radius:0 8px 8px 0;}
+  .latlegend{display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:12px; font-size:12.5px; color:var(--muted);}
+  .latlegend i{display:inline-block; width:11px; height:11px; border-radius:3px; margin-right:6px; vertical-align:-1px;}
+  .latlegend b{color:var(--ink); font-variant-numeric:tabular-nums;}
+
+  /* step cards */
+  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px; margin-top:16px;}
+  .step{border:1px solid var(--hairline); border-radius:12px; padding:14px 16px; background:var(--surface); font-size:13.5px;}
+  .step .t{font-size:11px; color:var(--accent); font-weight:600; letter-spacing:.09em; text-transform:uppercase; margin-bottom:4px;}
+  .step b{color:var(--ink);}
+
+  /* spoken pairs */
+  .pairs{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+  .pair{background:var(--surface2); border-radius:999px; padding:6px 14px; font-size:13px; color:var(--body);}
+  .pair b{color:var(--ink); font-weight:600;}
+  .pair .arr{color:var(--accent); margin-inline:6px;}
+
+  /* feature card (alcohol bug) */
+  .feature{background:var(--surface); border:1px solid var(--hairline); border-radius:18px;
+    padding:clamp(20px,3.4vw,32px); margin-block:8px 26px;}
+  .feature .fq{font-family:var(--serif); font-size:clamp(20px,2.6vw,26px); color:var(--ink); margin:4px 0 14px;}
+
+  /* KPI table */
+  table.kpi{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:18px;}
+  .kpi th{font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--muted); text-align:left; padding:8px 10px 8px 0; border-bottom:1px solid var(--hairline-strong);}
+  .kpi td{padding:11px 10px 11px 0; border-bottom:1px solid var(--hairline); vertical-align:top;}
+  .kpi td:first-child{color:var(--ink); font-weight:500;}
+  .kpi .pend{color:var(--amber); font-weight:600; white-space:nowrap;}
+  .kpiwrap{overflow-x:auto;}
+
+  /* outlet grid */
+  .grid6{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin-top:20px;}
+  .outlet{border-radius:14px; padding:16px 18px; font-size:13px; min-height:96px;}
+  .outlet.live{background:var(--surface); border:1.5px solid var(--accent);}
+  .outlet.live .t{color:var(--accent);}
+  .outlet.ghost{border:1.5px dashed var(--hairline-strong); color:var(--muted);}
+  .outlet .t{font-size:11px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; margin-bottom:6px; color:var(--muted);}
+  .outlet b{color:var(--ink); font-size:14px;}
+
+  /* handoff mock */
+  .mock{background:var(--surface); border:1px solid var(--hairline); border-radius:16px;
+    padding:20px 22px; max-width:560px; box-shadow:0 4px 16px rgba(0,0,0,.04); font-size:14px;}
+  .mock .top{font-size:12.5px; color:var(--muted); margin-bottom:8px;}
+  .mock .body{color:var(--ink); margin-bottom:12px;}
+  .mock .row{display:flex; flex-wrap:wrap; gap:8px; align-items:center;}
+  .mock .btn{border-radius:999px; padding:7px 16px; font-size:12.5px; font-weight:500;}
+  .mock .btn.pri{background:var(--ink); color:var(--canvas);}
+  .mock .btn.sec{border:1px solid var(--hairline-strong); color:var(--body);}
+
+  /* visual directions */
+  .dirs{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin-top:18px;}
+  .dir{background:var(--surface); border:1px solid var(--hairline); border-radius:16px; padding:20px 22px; font-size:13.5px;}
+  .dir .sw{display:inline-block; width:14px; height:14px; border-radius:4px; margin-right:5px; vertical-align:-2px; border:1px solid rgba(0,0,0,.08);}
+  .dir b{display:block; color:var(--ink); font-size:15px; margin-bottom:8px;}
+  .dir .best{color:var(--muted); font-size:12.5px; margin-top:8px;}
+
+  /* reflection */
+  .refl p{font-size:16.5px; line-height:1.65; max-width:62ch; margin:0 0 18px;}
+
+  .toc-nav{display:flex; flex-wrap:wrap; gap:8px;}
+  .toc-nav a{text-decoration:none;}
+  .statuschip{display:inline-flex; align-items:center; gap:8px; background:var(--amber-soft);
+    border:1px solid var(--amber); color:var(--amber); border-radius:999px; padding:6px 16px;
+    font-size:12.5px; font-weight:600; margin-top:20px;}
+
+  @media (max-width:640px){
+    .xrow{grid-template-columns:1fr;} .xrow .arr{display:none;}
+    .meta{gap:16px;}
+    .d{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .tabbar button{transition:background .15s ease, color .15s ease;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ================= HERO ================= -->
+  <header class="hero">
+    <p class="eyebrow">Case study · Voice UX &amp; interaction design · 2026</p>
+    <h1>A Table for Four, in&nbsp;Any Language</h1>
+    <p class="standfirst">A multilingual AI agent answers the phone at Hermitage, a fine dining
+      restaurant in Bengaluru. It picks up in one ring, answers from the restaurant's own
+      knowledge base, and books tables in the caller's language. I designed how it speaks,
+      listens, waits, and hands over.</p>
+    <dl class="meta">
+      <div><dt>Role</dt><dd>Product · design · research</dd></div>
+      <div><dt>Engineering</dt><dd>Shivang</dd></div>
+      <div><dt>Site</dt><dd>Hermitage, Malleshwaram</dd></div>
+      <div><dt>Timeline</dt><dd><span class="ph">PH</span> 4 months, 2026</dd></div>
+      <div><dt>Status</dt><dd>Going live on the line</dd></div>
+    </dl>
+  </header>
+
+  <!-- ================= UTTERANCE ================= -->
+  <section style="padding-top:0">
+    <div class="utter">
+      <p class="utter-line">"<span class="seg hi">Booking chahiye</span> <span class="seg">for 4</span>
+        <span class="seg slot">tomorrow at 8</span> please."</p>
+      <div class="utter-notes">
+        <div class="note"><b>Two languages in ten words</b>A Hindi verb carries the intent, English carries the details. This is the Bangalore pattern, not an edge case.</div>
+        <div class="note"><b>Three booking slots to fill</b>Party size, date, time. "At 8" is morning or evening until the agent confirms it back.</div>
+        <div class="note"><b>Zero visual affordances</b>No form, no buttons, no undo. Everything a screen would do must happen in sound and timing.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= THESIS ================= -->
+  <section class="thesis">
+    <div class="orb"></div>
+    <p class="eyebrow">The design question</p>
+    <p>How do you design an interface with no screen, in five languages, that a stranger will
+      trust with their booking, on a noisy line, at a restaurant they have never seen?</p>
+  </section>
+
+  <!-- ================= STAT TILES ================= -->
+  <section style="padding-top:0">
+    <div class="tiles">
+      <div class="tile"><div class="v">30–50%</div><div class="l">of peak hour calls to Indian restaurants go unanswered</div></div>
+      <div class="tile"><div class="v">40–70</div><div class="l">calls in one Friday dinner rush at a busy Bangalore restaurant</div></div>
+      <div class="tile"><div class="v">40–60%</div><div class="l">of reservation intent still arrives by phone, not by apps</div></div>
+      <div class="tile"><div class="v">₹2,000–6,000</div><div class="l">walks out with every missed reservation call</div></div>
+    </div>
+    <p class="cap source">The business case lives in the strategy doc. This page cites it and moves on.</p>
+    <nav class="toc-nav" style="margin-top:34px" aria-label="Contents">
+      <a class="chip" href="#context">01 Context</a>
+      <a class="chip" href="#research">02 Research</a>
+      <a class="chip" href="#strategy">03 The call</a>
+      <a class="chip" href="#voice">04 Voice UX</a>
+      <a class="chip" href="#testing">05 Testing</a>
+      <a class="chip" href="#owner">06 Owner surface</a>
+      <a class="chip ghost" href="#live">07 Going live</a>
+      <a class="chip ghost" href="#scale">08 Six restaurants</a>
+      <a class="chip" href="#next">09 Next</a>
+      <a class="chip" href="#reflection">10 Reflection</a>
+    </nav>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 01 CONTEXT ================= -->
+  <section id="context">
+    <div class="shead">
+      <p class="eyebrow">01 · The context</p>
+      <h2>Nobody owns the phone line</h2>
+      <p class="standfirst">Before designing anything, a map of how a Bangalore restaurant
+        actually talks to the world, and the one channel left unowned.</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 760 340" role="img" aria-label="Seven communication surfaces all route through the manager's own phone. The restaurant's phone line is the only channel with no system behind it.">
+        <g stroke="currentColor" stroke-opacity=".35" fill="none">
+          <line x1="380" y1="170" x2="150" y2="60"/>
+          <line x1="380" y1="170" x2="380" y2="52"/>
+          <line x1="380" y1="170" x2="150" y2="280"/>
+          <line x1="380" y1="170" x2="380" y2="292"/>
+          <line x1="380" y1="170" x2="610" y2="280"/>
+          <line x1="380" y1="170" x2="640" y2="170"/>
+        </g>
+        <line x1="380" y1="170" x2="610" y2="60" stroke="#2F5D3A" stroke-width="2.5"/>
+        <!-- center -->
+        <rect x="290" y="140" width="180" height="60" rx="14" fill="#27221C"/>
+        <text x="380" y="166" text-anchor="middle" fill="#F7F5F0" font-size="13" font-weight="600" font-family="Inter,sans-serif">The manager's phone</text>
+        <text x="380" y="184" text-anchor="middle" fill="#B9B0A2" font-size="11" font-family="Inter,sans-serif">the actual integration layer</text>
+        <!-- satellites -->
+        <g font-size="12" font-family="Inter,sans-serif">
+          <rect x="80" y="38" width="140" height="40" rx="20" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="150" y="62" text-anchor="middle" fill="#27221C">Petpooja POS</text>
+          <rect x="310" y="16" width="140" height="40" rx="20" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="380" y="40" text-anchor="middle" fill="#27221C">Swiggy tablet</text>
+          <rect x="80" y="260" width="140" height="40" rx="20" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="150" y="284" text-anchor="middle" fill="#27221C">WhatsApp</text>
+          <rect x="310" y="272" width="140" height="40" rx="20" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="380" y="296" text-anchor="middle" fill="#27221C">Zomato tablet</text>
+          <rect x="540" y="260" width="150" height="40" rx="20" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="615" y="284" text-anchor="middle" fill="#27221C">Google reviews</text>
+          <rect x="600" y="150" width="140" height="40" rx="20" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="670" y="174" text-anchor="middle" fill="#27221C">Instagram DMs</text>
+          <rect x="540" y="38" width="150" height="40" rx="20" fill="#EDF3ED" stroke="#2F5D3A" stroke-width="1.5"/>
+          <text x="615" y="57" text-anchor="middle" fill="#2F5D3A" font-weight="600">The phone line</text>
+          <text x="615" y="71" text-anchor="middle" fill="#2F5D3A" font-size="10.5">no system behind it</text>
+        </g>
+      </svg>
+      <figcaption>Seven surfaces, one human router. Every channel has a tool behind it except
+        the one where a call means a table. From the 17 point pain map in the desk research.</figcaption>
+    </figure>
+
+    <div class="obs">
+      <div class="ob"><b>Peak calls hit peak service.</b>The person best placed to answer the phone is the person busiest on the floor.</div>
+      <div class="ob"><b>Voicemail is culturally dead.</b>A missed call is not a delayed call. The caller dials the next restaurant.</div>
+      <div class="ob"><b>The phone is the revenue channel.</b>Reservations, catering, private dining. The highest value enquiries arrive by voice.</div>
+    </div>
+
+    <div data-tabs>
+      <div class="tabbar" role="tablist" aria-label="Context details">
+        <button role="tab" aria-selected="true" aria-controls="p-site" id="t-site">Hermitage, the site</button>
+        <button role="tab" aria-selected="false" aria-controls="p-team" id="t-team">The team and the access</button>
+      </div>
+      <div class="panel" role="tabpanel" id="p-site" aria-labelledby="t-site">
+        <dl class="facts">
+          <div><dt>Cuisine</dt><dd>Pure vegetarian, global menu</dd></div>
+          <div><dt>Setting</dt><dd>Heritage bungalow, Malleshwaram, in front of Harmakki Coffee</dd></div>
+          <div><dt>Signatures</dt><dd>Honey chilli lotus stem · Coco Mango in a tender coconut · ragi orange chocolate cake</dd></div>
+          <div><dt>The bar</dt><dd>There is none. <strong>Hermitage serves no alcohol.</strong> Hold that thought, it returns as the strangest bug in this project.</dd></div>
+        </dl>
+      </div>
+      <div class="panel" role="tabpanel" id="p-team" aria-labelledby="t-team" hidden>
+        <dl class="facts">
+          <div><dt>Access</dt><dd>Baldoria Hospitality opened a working restaurant's phone line, menu, and operating reality to us</dd></div>
+          <div><dt>Engineering</dt><dd>Shivang, who builds the speech and booking pipeline</dd></div>
+          <div><dt>Me</dt><dd>Product, design, and research, from problem framing to the words the agent says</dd></div>
+        </dl>
+        <p class="pull" style="margin-bottom:0">Ground truth from one real restaurant beats research about a thousand imagined ones.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 02 RESEARCH ================= -->
+  <section id="research">
+    <div class="shead">
+      <p class="eyebrow">02 · The research</p>
+      <h2>Three instruments, in order</h2>
+      <p class="standfirst">A map to find the leak, a visit to size it, and an intake
+        instrument to make the whole thing repeatable at the next restaurant.</p>
+    </div>
+
+    <div data-tabs>
+      <div class="tabbar" role="tablist" aria-label="Research instruments">
+        <button role="tab" aria-selected="true" aria-controls="p-map" id="t-map">The map</button>
+        <button role="tab" aria-selected="false" aria-controls="p-visit" id="t-visit">The visit</button>
+        <button role="tab" aria-selected="false" aria-controls="p-instr" id="t-instr">The instrument</button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-map" aria-labelledby="t-map">
+        <p style="margin-top:0; max-width:60ch">Two weeks of desk research charted every channel
+          a restaurant speaks through, each flow written the same way. Who, to whom, through
+          what, and <strong>where it breaks</strong>, because the breakage column is where
+          products live. Seventeen pain points came out ranked by business impact. The top five.</p>
+        <ol class="rank">
+          <li><span class="n">1</span><span><b>Missed calls during service.</b> <span class="why">A direct, countable revenue leak.</span></span></li>
+          <li><span class="n">2</span><span><b>Weekend bookings that never arrive.</b> <span class="why">15 to 25 percent of tables held for no one.</span></span></li>
+          <li><span class="n">3</span><span><b>Channels that don't sync.</b> <span class="why">Phone, Zomato Dining, and walk ins double book the same 8 pm slot.</span></span></li>
+          <li><span class="n">4</span><span><b>Review and reputation workload.</b> <span class="why">A daily chore across five open tabs that nobody owns.</span></span></li>
+          <li><span class="n">5</span><span><b>After hours catering enquiries.</b> <span class="why">The highest value calls, the least likely to be answered.</span></span></li>
+        </ol>
+        <p class="cap" style="margin-top:10px">+ 12 more in the full pain point map.</p>
+
+        <figure style="margin-top:30px">
+          <svg viewBox="0 0 640 210" role="img" aria-label="Schematic showing call volume peaking in the evening exactly when staff availability dips.">
+            <rect x="405" y="20" width="150" height="150" fill="#2F5D3A" opacity="0.08"/>
+            <g stroke="currentColor" stroke-opacity=".25">
+              <line x1="40" y1="170" x2="600" y2="170"/>
+            </g>
+            <path d="M40,150 C130,140 180,120 250,125 C320,130 370,60 470,42 C520,34 570,60 600,90"
+              fill="none" stroke="#2F5D3A" stroke-width="2.5"/>
+            <path d="M40,80 C120,75 200,85 280,95 C360,108 420,150 480,152 C530,153 570,130 600,115"
+              fill="none" stroke="#27221C" stroke-width="2" stroke-dasharray="5 5"/>
+            <g font-size="11.5" font-family="Inter,sans-serif" fill="#857C70">
+              <text x="40" y="192">12 pm</text>
+              <text x="250" y="192" text-anchor="middle">4 pm</text>
+              <text x="480" y="192" text-anchor="middle">8 pm</text>
+              <text x="600" y="192" text-anchor="end">11 pm</text>
+            </g>
+            <g font-size="12" font-family="Inter,sans-serif">
+              <text x="470" y="28" fill="#2F5D3A" font-weight="600">calls coming in</text>
+              <text x="44" y="68" fill="#27221C">hands free to answer</text>
+            </g>
+          </svg>
+          <figcaption>The finding underneath the ranking, drawn as a schematic rather than
+            measured data. Communication peaks at booking time and after the visit, exactly
+            when staff availability bottoms out. That collision is the shape of the product.</figcaption>
+        </figure>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-visit" aria-labelledby="t-visit" hidden>
+        <p style="margin-top:0; max-width:60ch">Desk research is a story until it survives
+          contact. The contextual inquiry was built to <strong>falsify it, not confirm it</strong>.
+          Hypotheses went on paper before the visit, one lunch and one dinner service went under
+          observation, and every interview opened with the same anchor question.</p>
+        <p class="pull">"What did you do today that a system should be doing?"</p>
+        <div class="mini">
+          <span><b class="num">41</b> calls logged across two services <span class="ph">PH</span></span>
+          <span><b class="num">14</b> rang out or hit a busy tone <span class="ph">PH</span></span>
+          <span><b class="num">9</b> carried booking or catering intent <span class="ph">PH</span></span>
+        </div>
+        <p class="cap">The reservation system was a diary at the host stand plus a Zomato tablet,
+          reconciled from the manager's memory. <span class="ph">PH</span></p>
+        <h3 style="margin-top:26px">Two findings changed my mind</h3>
+        <div class="flip">
+          <div class="card">
+            <div class="believed"><div class="lbl">What I believed</div>
+              The owner's hesitation about AI would be about replacing staff.</div>
+            <div class="saw"><div class="lbl">What I saw <span class="ph">PH</span></div>
+              His worry was the greeting. Whether a machine would receive a regular the way his
+              host does.</div>
+            <div class="so">→ shaped every persona decision in the voice section</div>
+          </div>
+          <div class="card">
+            <div class="believed"><div class="lbl">What I believed</div>
+              Bangalore callers mostly manage in English.</div>
+            <div class="saw"><div class="lbl">What I saw <span class="ph">PH</span></div>
+              English openings slid into Kannada or Hindi the moment the conversation got
+              specific. The overlay masks the real demand.</div>
+            <div class="so">→ made code switching a first class requirement, not a nice to have</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-instr" aria-labelledby="t-instr" hidden>
+        <p style="margin-top:0; max-width:60ch">A restaurant publishes maybe
+          <strong>30 percent</strong> of what its callers actually ask. The other 70 percent is
+          where a voice agent either shines or fabricates.</p>
+        <div class="split">
+          <div class="bar"><div class="pub"></div><div class="ask"></div></div>
+          <div class="legend"><span>published anywhere</span><span>asked on the phone anyway</span></div>
+        </div>
+        <div class="chips">
+          <span class="chip soft">"Can you write Marry me? on a dessert"</span>
+          <span class="chip soft">"Does a wheelchair fit through the door"</span>
+          <span class="chip soft">"Sugar free cake for a diabetic grandparent"</span>
+        </div>
+        <p style="max-width:60ch">So the intake became a designed instrument, the
+          KB&nbsp;questionnaire. Any outlet fills it once before its agent takes a live call,
+          collecting in three tiers, cheapest effort first.</p>
+        <div class="tiers">
+          <div class="tier"><div class="t">Tier 1 · Links</div><b>Auto extract</b> from Google, Zomato, Swiggy, the website. Near zero owner effort.</div>
+          <div class="tier"><div class="t">Tier 2 · Uploads</div><b>Parse documents.</b> The menu PDF, the allergen chart, the catering deck.</div>
+          <div class="tier"><div class="t">Tier 3 · Interview</div><b>Ask directly</b> only what the first two tiers missed. This is where the unpublished 70 percent lives.</div>
+        </div>
+        <div class="rulecard"><strong>The agent speaks only CONFIRMED facts.</strong> Anything
+          unverified becomes "let me have someone call you back." Ten go live blockers gate the
+          first real call.</div>
+        <p class="cap" style="margin-top:16px">A bank of 30+ caller personas, the parent with a
+          baby, the proposal planner, the wheelchair user, each traced to the field that must
+          exist before they dial. Every persona row doubles as a test call.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 03 STRATEGY ================= -->
+  <section id="strategy">
+    <div class="shead">
+      <p class="eyebrow">03 · The strategic call</p>
+      <h2>Why bookings, why first</h2>
+      <p class="standfirst">Six problems were scoped, from answering enquiries to review
+        management. The pilot attacks two. The reasoning, compressed from the strategy doc.</p>
+    </div>
+
+    <div class="reasons">
+      <div class="reason"><b>Countable pain</b>Missed calls can be metered before the agent and after it. The value is provable inside a single pilot.</div>
+      <div class="reason"><b>Real access</b>One working restaurant's line and menu through Baldoria. Ground truth, while competitors build from demos.</div>
+      <div class="reason"><b>An open category</b>Sarvam sells its own agents to banks at an enterprise floor. American products speak American English to American POS stacks.</div>
+      <div class="reason"><b>Hard in ways that compound</b>Code switching, noisy lines, allergen liability. Solving them builds edge case maps, evals, and intake instruments a horizontal player never will.</div>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 660 380" role="img" aria-label="Quadrant chart of Indic speech depth against restaurant domain depth. Sarvam is deep on Indic speech but enterprise only. US restaurant voice products are deep on restaurants but not Indic. The top right corner, deep on both, is open and is where this project sits.">
+        <g stroke="currentColor" stroke-opacity=".3" fill="none">
+          <line x1="70" y1="320" x2="620" y2="320"/>
+          <line x1="70" y1="320" x2="70" y2="30"/>
+          <line x1="345" y1="320" x2="345" y2="30" stroke-dasharray="4 5"/>
+          <line x1="70" y1="175" x2="620" y2="175" stroke-dasharray="4 5"/>
+        </g>
+        <g font-size="11.5" font-family="Inter,sans-serif" fill="#857C70">
+          <text x="620" y="342" text-anchor="end">restaurant domain depth →</text>
+          <text x="56" y="180" text-anchor="middle" transform="rotate(-90 56 180)">indic speech depth →</text>
+        </g>
+        <g font-family="Inter,sans-serif">
+          <circle cx="160" cy="80" r="7" fill="#27221C"/>
+          <text x="176" y="77" font-size="12.5" fill="#27221C" font-weight="600">Sarvam Voice Agents</text>
+          <text x="176" y="92" font-size="11" fill="#857C70">deep Indic, enterprise pricing floor</text>
+          <circle cx="520" cy="255" r="7" fill="#27221C"/>
+          <text x="504" y="252" font-size="12.5" fill="#27221C" font-weight="600" text-anchor="end">Certus · Loman · Slang</text>
+          <text x="504" y="267" font-size="11" fill="#857C70" text-anchor="end">US restaurant AI, no Indic stack</text>
+          <circle cx="180" cy="265" r="7" fill="#27221C" opacity=".55"/>
+          <text x="196" y="262" font-size="12.5" fill="#27221C" font-weight="600">Indian horizontals</text>
+          <text x="196" y="277" font-size="11" fill="#857C70">early, no domain depth</text>
+          <circle cx="520" cy="80" r="9" fill="#2F5D3A"/>
+          <circle cx="520" cy="80" r="15" fill="none" stroke="#2F5D3A" stroke-opacity=".4"/>
+          <text x="520" y="55" font-size="13" fill="#2F5D3A" font-weight="600" text-anchor="middle">the open corner</text>
+          <text x="520" y="110" font-size="11.5" fill="#2F5D3A" text-anchor="middle">this project</text>
+        </g>
+      </svg>
+      <figcaption>The category, from the competitive teardowns. Deep Indic speech and deep
+        restaurant domain knowledge do not currently coexist in one product. Restaurants appear
+        nowhere in Sarvam's public material.</figcaption>
+    </figure>
+
+    <div class="ladder">
+      <h3>Land narrow, expand per outlet</h3>
+      <div class="row">
+        <span class="chip now">Now · P1 Answer + P4 Book</span>
+        <span class="arrow">→</span>
+        <span class="chip">P3 Confirmations, fewer no shows</span>
+        <span class="arrow">→</span>
+        <span class="chip">P5 Feedback capture</span>
+        <span class="arrow">→</span>
+        <span class="chip">P2 Review management</span>
+      </div>
+      <div class="base"><strong>P6 Languages</strong> is not a module. It deepens under everything, and every language added widens the gap behind us.</div>
+    </div>
+
+    <div style="margin-top:30px">
+      <h3>Expansion is gated, not assumed</h3>
+      <div class="chips">
+        <span class="chip">25 paying outlets</span>
+        <span class="chip">Churn under 2%</span>
+        <span class="chip">Onboarding inside a day</span>
+        <span class="chip">Evals green in 4 languages</span>
+      </div>
+      <p class="cap" style="margin-top:10px">Until all four hold, one vertical, one city, one reference restaurant.</p>
+    </div>
+
+    <div class="band">
+      <p><strong>The interaction is the product.</strong> The whole pitch is handing an owner a
+        phone and saying "call your restaurant." The bar is not a good demo. It is dependability
+        at eight on a Friday night.</p>
+      <p class="next">Next · how a voice clears that bar ↓</p>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 04 VOICE UX ================= -->
+  <section id="voice">
+    <div class="shead">
+      <p class="eyebrow">04 · The voice UX</p>
+      <h2>A voice you can trust with your table</h2>
+      <p class="standfirst">The heart of this project. Every affordance a screen gives away for
+        free had to be rebuilt out of timing, word order, and honesty.</p>
+    </div>
+
+    <!-- 4a screen translated -->
+    <div class="sub first">
+      <h3 class="subhead">The screen, translated</h3>
+      <p class="sublede">The common idea is that a voice agent is a chatbot you can hear. It is
+        closer to a UI rebuilt from scratch. Everything below is a deliberate replacement, not a
+        degraded version of a screen.</p>
+      <div class="xmap">
+        <div class="xrow"><span class="g">A form with fields</span><span class="arr">→</span><span><b>One question per turn.</b> Date, then time, then party size. Never two questions in one breath.</span></div>
+        <div class="xrow"><span class="g">A confirmation dialog</span><span class="arr">→</span><span><b>Read back before write.</b> "Table for four, this Saturday, eight thirty. Shall I book it?" Nothing is written until yes.</span></div>
+        <div class="xrow"><span class="g">A loading spinner</span><span class="arr">→</span><span><b>A filler inside 400 ms.</b> "Mm, let me check." Presence, so the caller doesn't repeat themselves.</span></div>
+        <div class="xrow"><span class="g">An error state</span><span class="arr">→</span><span><b>An honest fallback.</b> "I'm not sure, let me have someone call you back," and a ticket that really gets created.</span></div>
+        <div class="xrow"><span class="g">Undo</span><span class="arr">→</span><span><b>Confirm after success.</b> Nothing counts as booked until the system returns success and the agent says it back. A dropped line mid booking books nothing.</span></div>
+        <div class="xrow"><span class="g">Visual hierarchy</span><span class="arr">→</span><span><b>Ruthless brevity.</b> Under thirty words a turn, answer first, one soft question after. The anti verbosity rule is enforced at the model level.</span></div>
+      </div>
+    </div>
+
+    <!-- 4b first three seconds -->
+    <div class="sub">
+      <h3 class="subhead">The first three seconds</h3>
+      <p class="sublede">A stranger on a phone is deciding whether to trust the voice with their
+        table. Most of that decision happens before the first question is answered.</p>
+      <div class="steps">
+        <div class="step"><div class="t">0 s · pickup</div><b>One ring.</b> The agent answers before the caller wonders if anyone will.</div>
+        <div class="step"><div class="t">~1 s · greeting</div><b>"Hermitage, good evening. How may I help?"</b> Openings rotate so regulars never hear a script.</div>
+        <div class="step"><div class="t">first utterance</div><b>Language detected inside 800 ms.</b> Namaste, namaskaara, or hello, the reply lands in the caller's language by turn two.</div>
+        <div class="step"><div class="t">if asked</div><b>"Are you a person?"</b> One honest sentence, "I'm Hermitage's virtual concierge," then the conversation continues. No apology for being AI.</div>
+      </div>
+      <p style="max-width:60ch; margin-top:20px">The persona is <strong>"Hermitage Reservations,"
+        with no human name</strong>. Hermitage's brand is quiet elegance, and a fake first name
+        would spend trust the agent hasn't earned. It says we and our, never "the restaurant."
+        Callers get sir, madam, or ji by language, and their own name exactly once, at booking
+        confirmation. Warmth by placement, not repetition.</p>
+      <div class="chips">
+        <span class="chip soft">EN · "Hermitage, good morning. How may I help?"</span>
+        <span class="chip soft">HI · "Hermitage se, namaste. Bataiye?"</span>
+        <span class="chip soft">KN · "Hermitage inda, namaskaara."</span>
+      </div>
+    </div>
+
+    <!-- 4c latency -->
+    <div class="sub">
+      <h3 class="subhead">Latency is a design material</h3>
+      <p class="sublede">On a phone, silence is the error state. The whole interaction runs
+        inside a 1.2 second ear to ear budget, and every stage has a share of it.</p>
+      <div class="lat" role="img" aria-label="The 1.2 second latency budget split across speech to text, intent and retrieval, language model, text to speech, and headroom.">
+        <div class="l1" style="width:12.5%"></div>
+        <div class="l2" style="width:25%"></div>
+        <div class="l3" style="width:25%"></div>
+        <div class="l4" style="width:16.7%"></div>
+        <div class="l5" style="width:20.8%"></div>
+      </div>
+      <div class="latlegend">
+        <span><i class="l1"></i>STT partial <b>150 ms</b></span>
+        <span><i class="l2"></i>Intent + retrieval <b>300 ms</b></span>
+        <span><i class="l3"></i>LLM first token <b>300 ms</b></span>
+        <span><i class="l4"></i>TTS first audio <b>200 ms</b></span>
+        <span><i class="l5"></i>Headroom to <b>1.2 s</b> P95</span>
+      </div>
+      <p style="max-width:60ch; margin-top:20px">The most important number isn't in the bar.
+        When an answer will take longer than <strong>400 ms, the agent speaks a filler first</strong>,
+        "mm, one moment," in the caller's language. That filler is a design decision, not an
+        engineering fallback. Without it, callers assume the line died and start repeating
+        themselves, and the conversation never recovers its rhythm.</p>
+      <p style="max-width:60ch">Numbers are written for the ear, never the eye.</p>
+      <div class="pairs">
+        <span class="pair">20:30 <span class="arr">→</span> <b>"eight thirty in the evening"</b></span>
+        <span class="pair">₹1,600 <span class="arr">→</span> <b>"sixteen hundred rupees"</b></span>
+        <span class="pair">2026&#8209;11&#8209;08 <span class="arr">→</span> <b>"the eighth of November"</b></span>
+      </div>
+    </div>
+
+    <!-- 4d barge-in -->
+    <div class="sub">
+      <h3 class="subhead">Interruptions are sacred</h3>
+      <p class="sublede">On a screen the user always has control. On a call, the only control a
+        caller has is to start talking. The agent must yield instantly, every time.</p>
+      <figure>
+        <svg viewBox="0 0 640 160" role="img" aria-label="When the caller starts speaking, the agent's voice stops within 150 milliseconds and the rest of its sentence is abandoned, never resumed.">
+          <g font-size="11.5" font-family="Inter,sans-serif" fill="#857C70">
+            <text x="10" y="52">agent</text>
+            <text x="10" y="112">caller</text>
+          </g>
+          <rect x="70" y="38" width="220" height="20" rx="6" fill="#E4EDE4" stroke="#2F5D3A"/>
+          <rect x="296" y="38" width="150" height="20" rx="6" fill="none" stroke="#D4CCBE" stroke-dasharray="4 4"/>
+          <text x="304" y="30" font-size="10.5" font-family="Inter,sans-serif" fill="#857C70">rest of the sentence, never resumed</text>
+          <rect x="260" y="98" width="240" height="20" rx="6" fill="#27221C"/>
+          <line x1="260" y1="26" x2="260" y2="130" stroke="#B45309" stroke-dasharray="3 4"/>
+          <text x="256" y="150" font-size="10.5" font-family="Inter,sans-serif" fill="#B45309" text-anchor="middle">caller starts</text>
+          <line x1="260" y1="70" x2="290" y2="70" stroke="#B45309" stroke-width="2"/>
+          <text x="298" y="74" font-size="11" font-family="Inter,sans-serif" fill="#B45309" font-weight="600">stop ≤ 150 ms</text>
+        </svg>
+        <figcaption>Barge in. The agent's speech is cut within 150 ms of the caller's voice,
+          and the abandoned sentence is treated as gone. Finishing it would mean talking over a
+          guest.</figcaption>
+      </figure>
+      <div class="obs" style="margin-top:22px">
+        <div class="ob"><b>Endpointing bends to the caller.</b> 800 ms of silence usually means "your turn." For slower and elderly speakers the window stretches, because cutting someone off mid thought reads as rude in any language.</div>
+        <div class="ob"><b>Fillers are not answers.</b> "Haan," "accha," and "ok" are engagement noises. The agent waits for the substance instead of treating them as a yes.</div>
+        <div class="ob"><b>Two people, one phone.</b> When the handset changes hands mid call, the agent greets the new person fresh and carries no personal details across.</div>
+      </div>
+    </div>
+
+    <!-- 4e code-switching -->
+    <div class="sub">
+      <h3 class="subhead">Code switching is the interface, not a bug</h3>
+      <p class="sublede">"Booking chahiye for 4 tomorrow at 8 please" is how Bengaluru actually
+        talks. The agent transcribes it faithfully, replies in the caller's dominant language,
+        and never corrects the mixing.</p>
+      <div class="flip">
+        <div class="card">
+          <div class="believed"><div class="lbl">The first build</div>
+            The pipeline used a speech model that translated everything to English on the way
+            in. Every Kannada menu name arrived as an English guess. "Coco Mango" could reach
+            the brain as "cocktail."</div>
+          <div class="saw"><div class="lbl">The fix</div>
+            Switch to native streaming transcription that keeps the caller's actual words.
+            Ragi stays ragi. The caller's language survives the pipeline, so the reply can
+            honor it.</div>
+          <div class="so">→ a model choice made for interaction reasons, not benchmark reasons</div>
+        </div>
+        <div class="card">
+          <div class="believed"><div class="lbl">Why canonical names matter</div>
+            A caller who says "Ragi Mudde" and hears "millet ball" back has just learned the
+            restaurant doesn't speak their language after all.</div>
+          <div class="saw"><div class="lbl">The rule</div>
+            Dish names are never translated, in any language. Numbers follow the language's own
+            convention, "aaru gante," not "six o'clock," "do hazaar," not "two thousand."</div>
+          <div class="so">→ trust on a phone line is built out of fidelity more than charm</div>
+        </div>
+      </div>
+      <p class="cap" style="margin-top:16px">A 20 to 40 term custom vocabulary boosts the words
+        this restaurant lives on. Hermitage, Malleshwaram, Harmakki, ragi, gyoza, kokum.</p>
+    </div>
+
+    <!-- 4f grounded -->
+    <div class="sub">
+      <h3 class="subhead">Never sure? Say so</h3>
+      <p class="sublede">Every fact the agent speaks is retrieved from the restaurant's own
+        knowledge base. If retrieval comes back empty, the agent does not improvise.</p>
+      <div class="rulecard"><strong>The RAG only rule.</strong> No fact from model memory, ever.
+        Below the retrieval threshold the agent says "I'm not sure, let me have someone call
+        you back," captures the question, and creates the callback. For a stated severe
+        allergy it never says safe at all. The chef calls back, every time.</div>
+      <p style="max-width:60ch; margin-top:18px">This is an engineering guardrail that shows up
+        as a <strong>felt property of the interaction</strong>. The agent is never over
+        confident, and a caller can hear the difference between a voice that knows and a voice
+        that is guessing. In audit terms the target is blunt. Zero fabricated menu items, and
+        the honest "I don't know" used at least once for every query the KB truly can't answer.</p>
+    </div>
+
+    <!-- 4g escalation -->
+    <div class="sub">
+      <h3 class="subhead">The escalation seam</h3>
+      <p class="sublede">The most important safety pattern in a medium with no affordances is
+        knowing when to stop being an interface.</p>
+      <div class="steps">
+        <div class="step"><div class="t">Always escalates</div><b>The caller asks for a human.</b> Also food safety, an allergy reaction, staff conduct, billing disputes, VIP guests, and the agent's own low confidence.</div>
+        <div class="step"><div class="t">During service</div><b>Warm transfer.</b> The call moves to the manager's phone while the caller is told what's happening. The agent goes silent the moment the human picks up.</div>
+        <div class="step"><div class="t">After hours</div><b>Never transfer to an empty floor.</b> A ticket with the full context, and the caller gets a promise the agent can keep, "our manager will call you back."</div>
+        <div class="step"><div class="t">On repeat failure</div><b>Three clarifications, then a human.</b> The zero loop rule. The agent never re asks the same question in the same words.</div>
+      </div>
+    </div>
+
+    <!-- 4h edge cases -->
+    <div class="sub">
+      <h3 class="subhead">Edge cases are a design surface</h3>
+      <p class="sublede">Over 300 mapped situations, each with a decided behavior, because on a
+        phone the edge case is not a crash screen. It is a person, mid sentence. Five that show
+        the thinking.</p>
+      <div data-tabs>
+        <div class="tabbar" role="tablist" aria-label="Edge cases">
+          <button role="tab" aria-selected="true" aria-controls="p-e1" id="t-e1">The party of ten</button>
+          <button role="tab" aria-selected="false" aria-controls="p-e2" id="t-e2">The allergy</button>
+          <button role="tab" aria-selected="false" aria-controls="p-e3" id="t-e3">Morning or evening</button>
+          <button role="tab" aria-selected="false" aria-controls="p-e4" id="t-e4">"Just give me a human"</button>
+          <button role="tab" aria-selected="false" aria-controls="p-e5" id="t-e5">The wrong person</button>
+        </div>
+        <div class="panel" role="tabpanel" id="p-e1" aria-labelledby="t-e1">
+          <p class="pull" style="margin-top:0">"Need ten seats this Saturday, 8 pm. It's a birthday."</p>
+          <p style="max-width:60ch">Above the group threshold the agent <strong>never auto
+            confirms</strong>. It takes the name, number, and occasion, and routes to the
+            manager, because a wrong table for ten on a Saturday costs the whole account. The
+            caller hears a commitment the restaurant can keep, not a booking it might break.</p>
+          <div class="chips"><span class="chip soft">eval EV&#8209;012</span><span class="chip soft">edge R&#8209;07</span></div>
+        </div>
+        <div class="panel" role="tabpanel" id="p-e2" aria-labelledby="t-e2" hidden>
+          <p class="pull" style="margin-top:0">"I have a peanut allergy. Is the ragi cake safe?"</p>
+          <p style="max-width:60ch">The agent states only what the menu data says and
+            <strong>never says the word safe</strong>. For a severe allergy the answer is a chef
+            callback, created on the spot. Allergen accuracy is a liability question wearing a
+            hospitality costume, and the confident answer is the wrong answer.</p>
+          <div class="chips"><span class="chip soft">eval EV&#8209;004</span><span class="chip soft">edge K&#8209;04</span><span class="chip soft">release flow 4</span></div>
+        </div>
+        <div class="panel" role="tabpanel" id="p-e3" aria-labelledby="t-e3" hidden>
+          <p class="pull" style="margin-top:0">"Table for two on Sunday at 7."</p>
+          <p style="max-width:60ch">Seven in the morning books no dinners. Nothing is written
+            until the agent has confirmed <strong>seven in the evening</strong> back to the
+            caller, and the same read back protects against homophones, "eight" heard as "ate,"
+            "for" heard as "four." Ambiguity is resolved out loud, never assumed.</p>
+          <div class="chips"><span class="chip soft">eval EV&#8209;006</span><span class="chip soft">edge R&#8209;11 · S&#8209;12</span></div>
+        </div>
+        <div class="panel" role="tabpanel" id="p-e4" aria-labelledby="t-e4" hidden>
+          <p class="pull" style="margin-top:0">"Actually, just give me a human."</p>
+          <p style="max-width:60ch">Mid booking, the write stops. Nothing half saved, no "I can
+            still help with that," no friction at all. <strong>The fastest path to a person is a
+            feature</strong>, and an agent that argues for its own usefulness has already lost
+            the caller's trust.</p>
+          <div class="chips"><span class="chip soft">eval EV&#8209;024</span><span class="chip soft">edge E&#8209;01</span></div>
+        </div>
+        <div class="panel" role="tabpanel" id="p-e5" aria-labelledby="t-e5" hidden>
+          <p class="pull" style="margin-top:0">"No, wrong number. Who is this?"</p>
+          <p style="max-width:60ch">An outbound reminder reaches a stranger's phone. The agent
+            confirms the guest's name <strong>before</strong> saying anything about the
+            reservation, and on a mismatch it apologises and ends, having read out nothing.
+            Privacy beats task completion, every time.</p>
+          <div class="chips"><span class="chip soft">edge T&#8209;17</span><span class="chip soft">eval EV&#8209;031</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 05 TESTING ================= -->
+  <section id="testing">
+    <div class="shead">
+      <p class="eyebrow">05 · Testing</p>
+      <h2>You can't screenshot a voice</h2>
+      <p class="standfirst">So the interaction gets its own instrumentation. Scripted phone
+        calls, a scored eval suite, and gates that block a release when anything slips.</p>
+    </div>
+
+    <div class="feature">
+      <p class="eyebrow" style="margin-bottom:6px">What testing caught first</p>
+      <p class="fq">"What drinks do you recommend?" And the agent, at a restaurant with no bar,
+        started talking about alcohol.</p>
+      <p style="max-width:62ch">The no alcohol fact you were asked to hold. Hermitage's
+        knowledge base states it clearly, several times, and that was the problem. For any fuzzy
+        drinks question, retrieval kept surfacing the alcohol chunk, and the model, primed by
+        it, answered a question nobody asked. The fix was retrieval design, not model magic.
+        Smaller chunks with topic tags, a wider retrieval net, a guard that ignores alcohol
+        context unless the caller literally said it, and positive chunks so "what specials?"
+        finds the Coco Mango and the mocktails first.</p>
+      <p class="cap" style="margin-top:12px">Result <span class="ph">PH</span> · the misfire
+        disappeared from test calls after the retrieval rebalance and the transcription switch
+        landed together. A knowledge base is a designed surface. What retrieval favors is what
+        the agent believes.</p>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 700 120" role="img" aria-label="Release pipeline. Any change runs the 14 case regression set, then the 47 case eval suite, then five scripted phone scenarios in every language, before release. A failure anywhere sends the change back.">
+        <defs><marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#857C70"/></marker></defs>
+        <g font-size="11.5" font-family="Inter,sans-serif">
+          <rect x="8" y="34" width="104" height="44" rx="12" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="60" y="53" text-anchor="middle" fill="#27221C" font-weight="600">any change</text>
+          <text x="60" y="68" text-anchor="middle" fill="#857C70" font-size="10">prompt · model · KB</text>
+          <rect x="152" y="34" width="122" height="44" rx="12" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="213" y="53" text-anchor="middle" fill="#27221C" font-weight="600">regression 14</text>
+          <text x="213" y="68" text-anchor="middle" fill="#857C70" font-size="10">100% or no merge</text>
+          <rect x="314" y="34" width="112" height="44" rx="12" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="370" y="53" text-anchor="middle" fill="#27221C" font-weight="600">full suite 47</text>
+          <text x="370" y="68" text-anchor="middle" fill="#857C70" font-size="10">must pass gates</text>
+          <rect x="466" y="34" width="128" height="44" rx="12" fill="#FFFFFF" stroke="#D4CCBE"/>
+          <text x="530" y="53" text-anchor="middle" fill="#27221C" font-weight="600">5 real call flows</text>
+          <text x="530" y="68" text-anchor="middle" fill="#857C70" font-size="10">per language, by phone</text>
+          <rect x="634" y="34" width="60" height="44" rx="12" fill="#2F5D3A"/>
+          <text x="664" y="60" text-anchor="middle" fill="#F7F5F0" font-weight="600">release</text>
+          <g stroke="#857C70" fill="none" marker-end="url(#arr)">
+            <line x1="112" y1="56" x2="146" y2="56"/>
+            <line x1="274" y1="56" x2="308" y2="56"/>
+            <line x1="426" y1="56" x2="460" y2="56"/>
+            <line x1="594" y1="56" x2="628" y2="56"/>
+          </g>
+        </g>
+      </svg>
+      <figcaption>The release gate. A red anywhere returns the change to the bench. The five
+        phone scenarios, a happy booking, an unavailable slot, the drinks trap, an allergy
+        question, and a private dining escalation, run in every supported language before any
+        caller hears the new build.</figcaption>
+    </figure>
+
+    <div class="chips" style="margin-top:20px">
+      <span class="chip soft">≤ 2 sentences a turn</span>
+      <span class="chip soft">no invented menu items, ever</span>
+      <span class="chip soft">₹, never $</span>
+      <span class="chip soft">canonical dish names</span>
+      <span class="chip soft">confirm date, time, pax before any write</span>
+      <span class="chip soft">caller speech is data, not instructions</span>
+    </div>
+    <p class="cap" style="margin-top:10px">Eight global rules scored on every single eval case,
+      whatever the case is about.</p>
+
+    <div class="tiles" style="margin-top:26px">
+      <div class="tile"><div class="v">— <span class="ph">PH</span></div><div class="l">word error rate by language · target ≤ 12%</div></div>
+      <div class="tile"><div class="v">— <span class="ph">PH</span></div><div class="l">P95 ear to ear latency · target ≤ 1.2 s</div></div>
+      <div class="tile"><div class="v">— <span class="ph">PH</span></div><div class="l">turns to a confirmed booking · target ≤ 3 on the happy path</div></div>
+      <div class="tile"><div class="v">— <span class="ph">PH</span></div><div class="l">barge in stop time · target ≤ 150 ms</div></div>
+    </div>
+    <p class="cap source">These tiles fill with measured values as the phone test protocol runs
+      in each language.</p>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 06 OWNER SURFACE ================= -->
+  <section id="owner">
+    <div class="shead">
+      <p class="eyebrow">06 · The second surface</p>
+      <h2>A colleague, not a control room</h2>
+      <p class="standfirst">The owner's side of the product began as a chat you could ask
+        anything. Designing for live service reshaped it.</p>
+    </div>
+
+    <p style="max-width:62ch">The founding position was <strong>chat first</strong>. An owner
+      should never have to learn a dashboard, so the spec put every question, config change,
+      and approval into one conversation, on web and WhatsApp. "How many calls did we miss
+      yesterday?" answered in a sentence, "mark the pandi curry as 86" applied after a one line
+      confirmation. The design pass kept that conviction and found its limit. <strong>Live
+      service is visual.</strong> A call happening right now, an approval with the audio
+      attached, a kill switch you can find in a panic. Those want screens. So screens became
+      first class for the manager during service, and the ask anything chat returns as a peer
+      surface for the owner's pocket.</p>
+
+    <div class="reasons">
+      <div class="reason"><b>The AI has agency, the screen witnesses it</b>Cards read "the AI is booking a table for Priya," not "call in progress." The manager watches a colleague work.</div>
+      <div class="reason"><b>Handoffs, not escalations</b>The AI passes a call the way one waiter briefs another. Context in two warm lines, never an error code.</div>
+      <div class="reason"><b>Ground or admit</b>Every number carries its source and its window. The ROI figure shows its own math. A fabricated number is worse than no number.</div>
+      <div class="reason"><b>Tiered friction</b>86 a dish in one tap. Change deposit rules behind a preview and a confirm. Pause the AI behind real friction. Consequence sets the ceremony.</div>
+    </div>
+
+    <figure style="margin-top:10px">
+      <div class="mock">
+        <div class="top">Neha S. · +91 98450 87654 · AI transferred at 8:14 pm</div>
+        <div class="body">Handing this to you. They want the private room next Saturday for
+          their parents' anniversary, around 25 guests, and they asked about our Jain menu
+          options.</div>
+        <div class="row">
+          <span class="chip soft">Private dining</span><span class="chip soft">EN</span>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <span class="btn pri">Call back</span><span class="btn sec">Show transcript</span><span class="btn sec">Snooze</span>
+        </div>
+      </div>
+      <figcaption>The handoff card, the emotional center of the manager's screen. Built copy
+        first, because the words are the interface.</figcaption>
+    </figure>
+
+    <div class="dirs">
+      <div class="dir"><b>Direction A · Ops console</b>
+        <span class="sw" style="background:#f5f5f5"></span><span class="sw" style="background:#292524"></span><span class="sw" style="background:#2F5D3A"></span>
+        Calm tech. Neutral ground, one ink action color, tabular numerals, no illustration. Data speaks.
+        <div class="best">Best for the manager mid service.</div></div>
+      <div class="dir"><b>Direction B · Warm hospitality</b>
+        <span class="sw" style="background:#FBF7F1"></span><span class="sw" style="background:#E88742"></span><span class="sw" style="background:#2F5D3A"></span>
+        Cream ground, editorial serif for the big numbers, hand drawn warmth in empty states.
+        <div class="best">Best for the owner's Monday ritual, and for pitching the next restaurant.</div></div>
+    </div>
+    <p class="cap" style="margin-top:14px">Both directions share one IA, one component set, one
+      interaction ruleset. Only the surface differs. Hero screen mocks land here after the
+      Figma pass. <span class="ph">PH</span></p>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 07 GOING LIVE (SHELL) ================= -->
+  <section id="live">
+    <div class="shead">
+      <p class="eyebrow">07 · Going live</p>
+      <h2>The line flips once</h2>
+      <p class="standfirst">And only after the boring work. This section fills with real numbers
+        as the 90 day pilot runs at Hermitage.</p>
+    </div>
+    <span class="statuschip">● Status · pre flip, pilot instrumentation in progress</span>
+
+    <ol class="rank" style="margin-top:26px">
+      <li><span class="n">1</span><span><b>Close the go live blockers.</b> <span class="why">Ten fields the agent cannot be wrong about. Menu, hours, alcohol answer, escalation contacts. <span class="ph">PH</span> 7 of 10 closed.</span></span></li>
+      <li><span class="n">2</span><span><b>Measure the baseline before flipping.</b> <span class="why">Two weeks of the current line, recorded and classified. No baseline, no proof pack.</span></span></li>
+      <li><span class="n">3</span><span><b>Pass the five scenario protocol in English and Hindi.</b> <span class="why">By phone, not browser mic, on the real telephony path.</span></span></li>
+      <li><span class="n">4</span><span><b>Disclose and consent.</b> <span class="why">Recording disclosed, data in India, audio kept 90 days, deletion honored in 30, and no caller data ever trains external models.</span></span></li>
+      <li><span class="n">5</span><span><b>Flip one line, keep the kill switch close.</b> <span class="why">The owner can pause the agent in one action, and callers fall back to the old voicemail path, never to silence.</span></span></li>
+    </ol>
+
+    <div class="kpiwrap">
+      <table class="kpi">
+        <thead><tr><th>What the pilot must prove</th><th>Baseline</th><th>90 day target</th><th>Actual</th></tr></thead>
+        <tbody>
+          <tr><td>Inbound calls answered</td><td>~50 to 70% <span class="ph">PH</span></td><td>&gt; 90%</td><td class="pend">pending</td></tr>
+          <tr><td>Weekend no shows</td><td>15 to 25%</td><td>under 15%</td><td class="pend">pending</td></tr>
+          <tr><td>Booking accuracy</td><td>diary + memory</td><td>≥ 98%, zero double bookings</td><td class="pend">pending</td></tr>
+          <tr><td>Feedback captured per visit</td><td>near zero</td><td>≥ 40%</td><td class="pend">pending</td></tr>
+          <tr><td>Caller satisfaction with the AI</td><td>—</td><td>≥ 4.3 / 5</td><td class="pend">pending</td></tr>
+          <tr><td>Cost per handled call</td><td>—</td><td>under ₹8</td><td class="pend">pending</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap source">Targets from the pilot KPI set in the problem statement. The actual
+      column is the point of this section, and it stays honest until the data exists.</p>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 08 SCALE (SHELL) ================= -->
+  <section id="scale">
+    <div class="shead">
+      <p class="eyebrow">08 · After the pilot</p>
+      <h2>The sixth restaurant is the real test</h2>
+      <p class="standfirst">Hermitage proves the agent. The next outlet proves the instrument,
+        because nothing hand built survives a second restaurant.</p>
+    </div>
+    <p style="max-width:62ch">Everything in this case study was designed twice. Once for
+      Hermitage, and once as a repeatable process. The KB questionnaire produces the knowledge
+      base, the eval suite gates every outlet's go live, and the target is a restaurant
+      <strong>live within one day, without an engineer in the room</strong>. This grid fills as
+      that claim gets tested.</p>
+    <div class="grid6">
+      <div class="outlet live"><div class="t">Outlet 01 · pilot</div><b>Hermitage</b><br>Malleshwaram · EN + HI · reservation led fine dining</div>
+      <div class="outlet ghost"><div class="t">Outlet 02</div>cuisine · languages · days to live</div>
+      <div class="outlet ghost"><div class="t">Outlet 03</div>cuisine · languages · days to live</div>
+      <div class="outlet ghost"><div class="t">Outlet 04</div>cuisine · languages · days to live</div>
+      <div class="outlet ghost"><div class="t">Outlet 05</div>cuisine · languages · days to live</div>
+      <div class="outlet ghost"><div class="t">Outlet 06</div>cuisine · languages · days to live</div>
+    </div>
+    <p class="cap" style="margin-top:14px">Growth path from the strategy doc. Baldoria's other
+      interests, then the Malleshwaram neighbours, then the Bangalore fine dine belt. Dense
+      clusters keep demos and word of mouth cheap. Each card will carry what transferred
+      cleanly and what the outlet forced us to redesign. <span class="ph">PH</span></p>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 09 NEXT ================= -->
+  <section id="next">
+    <div class="shead">
+      <p class="eyebrow">09 · What I would do next</p>
+      <h2>Four open design questions</h2>
+      <p class="standfirst">Framed as questions rather than roadmap rows, because each one
+        changes the interaction, not just the feature list.</p>
+    </div>
+    <div class="reasons">
+      <div class="reason"><b>What does respect sound like in Kannada?</b>Adding Kannada and Tamil is register design, not translation. Courtesies, number conventions, and pace differ per language, and the pilot's language logs decide the order.</div>
+      <div class="reason"><b>When is a reminder welcome?</b>Outbound confirmation calls are interruption design. A reminder is welcome exactly once, inside decent hours, with two attempts at most, then WhatsApp. Getting this wrong turns the agent into spam with good latency.</div>
+      <div class="reason"><b>Can an owner onboard alone?</b>Sixty minutes from menu upload to test call, with nobody from our side in the room. Self serve onboarding is the gate between a pilot and a product.</div>
+      <div class="reason"><b>What changes when the voice becomes text?</b>The same grounded brain on WhatsApp, where booking intent is already drifting. The transcript becomes the interface, and half the voice patterns, read back, honest fallback, escalation, translate directly.</div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ================= 10 REFLECTION ================= -->
+  <section id="reflection" class="refl">
+    <div class="shead">
+      <p class="eyebrow">10 · Reflection</p>
+      <h2>What the phone taught me</h2>
+    </div>
+    <p>Designing this taught me that a voice interface is everything a screen spends pixels on,
+      rebuilt out of timing, word order, and honesty. A confirmation dialog became a sentence
+      read back before anything is written. A loading spinner became a two word filler placed
+      inside 400 milliseconds. An error state became the agent admitting it isn't sure and
+      promising a callback it actually creates. The strongest design tool in the whole system
+      turned out to be restraint. Thirty words a turn, one question at a time, the caller's own
+      dish names said back exactly as the menu prints them. Trust on a phone line is built out
+      of fidelity more than charm.</p>
+    <p>The other lesson is about building AI responsibly when real money and real allergies ride
+      on the answers. The grounded generation rule and the privacy work read like compliance on
+      paper, but on the call they are the personality. An agent that refuses to guess feels
+      calm. And the gap between AI that impresses in a demo and AI that is boringly reliable at
+      eight pm on a Friday is the gap this whole project lives in. The demo takes a weekend. The
+      reliability takes the eval suite, the edge case catalogue, the intake instrument, and a
+      team willing to gate its own launch.</p>
+  </section>
+
+  <!-- ================= DECISION LOG ================= -->
+  <details class="dlog">
+    <summary>Decision log · 17 entries</summary>
+    <div class="dl">
+      <div class="d"><span class="id">D-001</span><span><b>Open inside one code switched caller utterance.</b>
+        <span class="out">Rules out a market sizing opening or any "AI is the future" framing.</span>
+        <span class="gr">Grounded in the speaking instructions §14 and problem statement P6, which treat code switching as the core pattern.</span></span></div>
+      <div class="d"><span class="id">D-002</span><span><b>Plant the no alcohol fact in the context section.</b>
+        <span class="out">Rules out introducing it later as trivia when the alcohol trap appears.</span>
+        <span class="gr">Grounded in the Sarvam tuning playbook §0 and §2, the alcohol misfire.</span></span></div>
+      <div class="d"><span class="id">D-003</span><span><b>Present research as map, then hypotheses, then visit, then instrument.</b>
+        <span class="out">Rules out opening the research section with a site visit anecdote.</span>
+        <span class="gr">Grounded in the desk research §10, which wrote falsifiable hypotheses before the visit.</span></span></div>
+      <div class="d"><span class="id">D-004</span><span><b>Frame the KB questionnaire around the unpublished 70 percent.</b>
+        <span class="out">Rules out describing KB intake as engineering setup work.</span>
+        <span class="gr">Grounded in the KB questionnaire intro and its §13 persona bank.</span></span></div>
+      <div class="d"><span class="id">D-005</span><span><b>Mark every fieldwork number PH until the Hermitage visit data lands.</b>
+        <span class="out">Rules out publishing invented findings as observed ones.</span>
+        <span class="gr">Grounded in the strategy doc's rigor bar, every claim survives a hostile follow up.</span></span></div>
+      <div class="d"><span class="id">D-006</span><span><b>Fold the business argument into one compressed section that cites the strategy doc.</b>
+        <span class="out">Rules out a standalone business strategy section in a design case study.</span>
+        <span class="gr">Grounded in strategy doc §3 and §6, which carry the full defense.</span></span></div>
+      <div class="d"><span class="id">D-007</span><span><b>Treat reliability, not capability, as the bar the product must clear.</b>
+        <span class="out">Rules out framing the agent as impressive demo technology.</span>
+        <span class="gr">Grounded in strategy doc §6 and the eval suite's must pass gates.</span></span></div>
+      <div class="d"><span class="id">D-008</span><span><b>Author the case study as a screen, not an essay.</b>
+        <span class="out">Rules out long form prose as the primary reading experience.</span>
+        <span class="gr">Grounded in how portfolio reviewers actually read, headlines and visuals first, depth on demand.</span></span></div>
+      <div class="d"><span class="id">D-009</span><span><b>The persona is "Hermitage Reservations," no human name, honest AI disclosure.</b>
+        <span class="out">Rules out a named concierge or any pretense of being a person.</span>
+        <span class="gr">Grounded in the speaking instructions §1, quiet elegance, and the one sentence disclosure rule.</span></span></div>
+      <div class="d"><span class="id">D-010</span><span><b>Treat latency as a design material, with the 400 ms filler as core interaction.</b>
+        <span class="out">Rules out silent waits and rules out framing fillers as an engineering fallback.</span>
+        <span class="gr">Grounded in the problem statement §5.5 latency budget and the tuning playbook §5.3.</span></span></div>
+      <div class="d"><span class="id">D-011</span><span><b>Transcribe faithfully, respond in the dominant language, never correct mixing, never translate dish names.</b>
+        <span class="out">Rules out the translate to English pipeline, which is why the STT model was switched.</span>
+        <span class="gr">Grounded in the tuning playbook §1, edge case L&#8209;01, and eval rule G6.</span></span></div>
+      <div class="d"><span class="id">D-012</span><span><b>Grounded generation only, with the honest fallback, and never "safe" for a severe allergy.</b>
+        <span class="out">Rules out confident generation from model memory.</span>
+        <span class="gr">Grounded in the problem statement §3.4 and evals EV&#8209;004 and EV&#8209;010.</span></span></div>
+      <div class="d"><span class="id">D-013</span><span><b>Escalation is a warm transfer during service and a kept promise after hours.</b>
+        <span class="out">Rules out ever transferring a caller to an empty floor.</span>
+        <span class="gr">Grounded in edge cases T&#8209;13 and T&#8209;14 and the escalation triggers in §3.6.</span></span></div>
+      <div class="d"><span class="id">D-014</span><span><b>Screens are first class for the manager during service, chat returns as a peer surface.</b>
+        <span class="out">Rules out a chat only operator experience, revising the original chat first spec.</span>
+        <span class="gr">Grounded in the dashboard requirements §1.3, live ops is inherently visual.</span></span></div>
+      <div class="d"><span class="id">D-015</span><span><b>Evals gate every release, five phone scenarios per language before any caller hears a build.</b>
+        <span class="out">Rules out releasing on the feel of a good demo.</span>
+        <span class="gr">Grounded in the eval suite's regression gate and the tuning playbook §9 protocol.</span></span></div>
+      <div class="d"><span class="id">D-016</span><span><b>Measure the baseline before flipping the line.</b>
+        <span class="out">Rules out a pilot whose results can't be compared to anything.</span>
+        <span class="gr">Grounded in the strategy doc's next 90 days, no baseline, no proof pack.</span></span></div>
+      <div class="d"><span class="id">D-017</span><span><b>Ship the go live, pilot, and scale sections as honest shells with pending data.</b>
+        <span class="out">Rules out fabricating pilot results to make the story feel finished.</span>
+        <span class="gr">Grounded in the same rigor bar as everything else, the actual column stays empty until it's real.</span></span></div>
+    </div>
+  </details>
+
+  <footer>
+    <span class="ph">PH</span> marks a plausible placeholder awaiting real data ·
+    Full draft, sections 1 to 10 · Going live and scale sections fill as the pilot runs ·
+    Shruthi VD, 2026
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll("[data-tabs]").forEach(group => {
+    const tabs = group.querySelectorAll("[role=tab]");
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => {
+          t.setAttribute("aria-selected", t === tab ? "true" : "false");
+          const panel = group.querySelector("#" + t.getAttribute("aria-controls"));
+          if (panel) panel.hidden = t !== tab;
+        });
+      });
+    });
+  });
+</script>
+</body></html>
